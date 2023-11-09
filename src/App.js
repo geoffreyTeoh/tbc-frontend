@@ -1,17 +1,25 @@
 import './App.css';
-import tbcphoto from './tbcphoto.png';
+import { createBrowserHistory } from 'history';
+import ReactGA from 'react-ga';
+import {  BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
+import {Provider} from 'react-redux';
+import store from './redux/store';
+import PageRoutes from './routes/pageRoutes';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="tbc-app-header" style={{ backgroundImage: `url(${tbcphoto})`}}>
-        <div className="overlay">
-          <p>Tuesday Badminton Comunity</p>
-          <p className="tbc-tagline">Stay tuned for Our Major Announcement!</p>
-        </div>
-      </header>
-    </div>
-  );
-}
+export const history = createBrowserHistory({ basename: '/' });
+// Initialize google analytics page view tracking
+history.listen((location) => {
+  ReactGA.set({ page: location.pathname }); // Update the user's current page
+  ReactGA.pageview(location.pathname); // Record a pageview for the given page
+});
+const App = () => (
+  <>
+    <BrowserRouter history={history}>
+      <Provider store={store}>
+        <PageRoutes />
+      </Provider>
+  </BrowserRouter>,
+  </>
+);
 
 export default App;
